@@ -38,7 +38,6 @@ from diffusers.models.unet_2d_blocks import (
 )
 from diffusers.models.unet_2d_condition import UNet2DConditionModel
 from torch import Tensor
-from .linear import NonDynamicallyQuantizableLinear
 from torch.nn.init import constant_, xavier_normal_, xavier_uniform_
 
 
@@ -184,7 +183,7 @@ class MultiheadAttention(nn.Module):
             self.in_proj_bias = nn.Parameter(torch.empty(3 * embed_dim, **factory_kwargs))
         else:
             self.register_parameter('in_proj_bias', None)
-        self.out_proj = NonDynamicallyQuantizableLinear(embed_dim, embed_dim, bias=bias, **factory_kwargs)
+        self.out_proj = nn.Linear(embed_dim, embed_dim, bias=bias, **factory_kwargs)
 
         if add_bias_kv:
             self.bias_k = nn.Parameter(torch.empty((1, 1, embed_dim), **factory_kwargs))
